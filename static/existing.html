@@ -1,1 +1,11 @@
 select existing event
+
+<form ng-controller="ExistingController">
+	<fieldset>
+	  <input type="text" placeholder="Event Name" size=50 ng-model="state.eventName" />
+	  <br/>
+	  <input type="text" placeholder="Access Code" size=20 ng-model="state.eventAccessCode" />
+	  <br/>
+	  <button type='submit' ng-click="retrieveEvent()">Retrieve Event</button>
+	</fieldset>
+</form>

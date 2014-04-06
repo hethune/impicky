@@ -1,1 +1,13 @@
-create event here
+<h1> create your event here </h1>
+
+<form ng-controller="NewController">
+	<fieldset>
+	  <input type="text" placeholder="Event Name" size=50 ng-model="state.eventName" />
+	  <br/>
+	  <input type="text" placeholder="Access Code" size=20 ng-model="state.eventAccessCode" />
+	  <br/>
+	  <input type="text" placeholder="Repeat Access Code" size=20 />
+	  <br/>
+	  <button type='submit' ng-click="addEvent()">Add Event</button>
+	</fieldset>
+</form>

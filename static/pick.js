@@ -4,19 +4,17 @@ angular
         $routeProvider
             .when('/', {
                 templateUrl: '../static/login.html',
-                controller: 'LoginController'
             })
             .when('/new', {
                 templateUrl: '../static/new.html',
-                controller: 'NewEventController',
+                controller: 'NewController',
             })
             .when('/existing', {
                 templateUrl: '../static/existing.html',
-                controller: 'LoginController',
+                controller: 'ExistingController',
             })
             .when('/event', {
                 templateUrl: '../static/event.html',
-                controller: 'EventController',
             })
             .otherwise({ redirectTo: '/' });
     }])
@@ -26,60 +24,88 @@ angular
             return $window.alert;
         }
     ])
-    .controller('PickController', [
+    .factory('Event', [function() {
+        return {
+            add: function() {
+
+            },
+            get: function() {
+
+            }
+        }
+    }])
+    .controller('NewController', [
         '$scope',
         '$http',
         'windowAlert',
         function($scope, $http, windowAlert) {
-            $scope.RETRIEVE_DEFAULT_NR = 5;
             $scope.state = {};
-            $scope.state.todoList = [];
-            $scope.state.retrieveNr = $scope.RETRIEVE_DEFAULT_NR;
-            $scope.state.pageName = 'todoList';
+            $scope.state.pageName = 'p2a';
 
-            $scope.addItem = function() {
-                if (!$scope.state.newItem) {
-                    windowAlert("text field must be non-empty");
-                } else {
-                    $http
-                        .post('/todoAdd', {
-                            item: $scope.state.newItem
-                        })
-                        .success(function(data, status, headers, config) {
-                            if (data.success) {
-                                $scope.retrieveLastNItems(
-                                    $scope.state.retrieveNr
-                                );
-                            } else {
-                                windowAlert('Adding of item failed');
-                            }
-                        })
-                        .error(function(data, status, headers, config) {
-                        });
+            $scope.addEvent = function() {
+                if (!$scope.state.eventName) {
+                    windowAlert("Event Name must be non-empty");
+                    return;
                 }
-            };
+                if (!$scope.state.eventAccessCode) {
+                    windowAlert("Event Access must be non-empty");
+                    return;
+                }
 
-            $scope.retrieveLastNItems = function(n) {
                 $http
-                    .get('/todoRetrieve/' + n)
+                    .post('/eventAdd', {
+                        item: $scope.state.newItem
+                    })
                     .success(function(data, status, headers, config) {
                         if (data.success) {
-                            $scope.state.todoList = data.todoList;
+                            windowAlert('Adding data succeeded')
                         } else {
-                            windowAlert('Retrieval failed');
+                            windowAlert('Adding of item failed');
                         }
                     })
                     .error(function(data, status, headers, config) {
-                        windowAlert("Retrieval failed");
+                        windowAlert("Send Error");
                     });
-            };
-
-            $scope.setAndRetrieveLastNItems = function(n) {
-                $scope.state.retrieveNr = n;
-                $scope.retrieveLastNItems($scope.state.retrieveNr);
             };
         }
     ])
+
+    .controller('ExistingController', [
+        '$scope',
+        '$http',
+        'windowAlert',
+        function($scope, $http, windowAlert) {
+            $scope.state = {};
+            $scope.state.pageName = 'p2b';
+
+            $scope.retrieveEvent = function() {
+                if (!$scope.state.eventName) {
+                    windowAlert("Event Name must be non-empty");
+                    return;
+                }
+                if (!$scope.state.eventAccessCode) {
+                    windowAlert("Event Access must be non-empty");
+                    return;
+                }
+
+                $http
+                    .post('/eventRetrieve', {
+                        item: $scope.state.newItem
+                    })
+                    .success(function(data, status, headers, config) {
+                        if (data.success) {
+                            windowAlert('Retrieving data succeeded')
+                        } else {
+                            windowAlert('Adding of item failed');
+                        }
+                    })
+                    .error(function(data, status, headers, config) {
+                        windowAlert("Send Error");
+                    });
+            };
+        }
+    ])
+
     .directive('navtabs', function() {
         return {
             restrict: 'E',
