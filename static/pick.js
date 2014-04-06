@@ -37,8 +37,9 @@ angular
     .controller('NewController', [
         '$scope',
         '$http',
+        '$location',
         'windowAlert',
-        function($scope, $http, windowAlert) {
+        function($scope, $http, $location, windowAlert) {
             $scope.state = {};
             $scope.state.pageName = 'p2a';
 
@@ -58,7 +59,8 @@ angular
                     })
                     .success(function(data, status, headers, config) {
                         if (data.success) {
-                            windowAlert('Adding data succeeded')
+                            windowAlert('Adding data succeeded');
+                            $location.path('/event');
                         } else {
                             windowAlert('Adding of item failed');
                         }
@@ -73,8 +75,9 @@ angular
     .controller('ExistingController', [
         '$scope',
         '$http',
+        '$location',
         'windowAlert',
-        function($scope, $http, windowAlert) {
+        function($scope, $http, $location, windowAlert) {
             $scope.state = {};
             $scope.state.pageName = 'p2b';
 
@@ -94,7 +97,8 @@ angular
                     })
                     .success(function(data, status, headers, config) {
                         if (data.success) {
-                            windowAlert('Retrieving data succeeded')
+                            windowAlert('Retrieving data succeeded');
+                            $location.path('/event');
                         } else {
                             windowAlert('Adding of item failed');
                         }
