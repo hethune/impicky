@@ -15,6 +15,7 @@ angular
             })
             .when('/event', {
                 templateUrl: '../static/event.html',
+                controller: 'EventController',
             })
             .otherwise({ redirectTo: '/' });
     }])
@@ -24,13 +25,19 @@ angular
             return $window.alert;
         }
     ])
-    .factory('Event', [function() {
+    .factory('eventStatus', [function() {
+        var name;
+        var accessCode;
         return {
-            add: function() {
-
+            save: function(_name, _accessCode) {
+                name = _name;
+                accessCode = _accessCode;
             },
-            get: function() {
-
+            getName: function() {
+                return name;
+            },
+            getAccessCode: function() {
+                return accessCode;
             }
         }
     }])
@@ -39,7 +46,8 @@ angular
         '$http',
         '$location',
         'windowAlert',
-        function($scope, $http, $location, windowAlert) {
+        'eventStatus',
+        function($scope, $http, $location, windowAlert, eventStatus) {
             $scope.state = {};
             $scope.state.pageName = 'p2a';
 
@@ -59,7 +67,7 @@ angular
                     })
                     .success(function(data, status, headers, config) {
                         if (data.success) {
-                            windowAlert('Adding data succeeded');
+                            eventStatus.save("testNewName", "TestNameAccessCode");
                             $location.path('/event');
                         } else {
                             windowAlert('Adding of item failed');
@@ -77,7 +85,8 @@ angular
         '$http',
         '$location',
         'windowAlert',
-        function($scope, $http, $location, windowAlert) {
+        'eventStatus',
+        function($scope, $http, $location, windowAlert, eventStatus) {
             $scope.state = {};
             $scope.state.pageName = 'p2b';
 
@@ -97,7 +106,7 @@ angular
                     })
                     .success(function(data, status, headers, config) {
                         if (data.success) {
-                            windowAlert('Retrieving data succeeded');
+                            eventStatus.save("testExistingName", "TestExistingAccessCode");
                             $location.path('/event');
                         } else {
                             windowAlert('Adding of item failed');
@@ -110,47 +119,21 @@ angular
         }
     ])
 
-    .directive('navtabs', function() {
-        return {
-            restrict: 'E',
-            replace: true,
-            templateUrl: '../static/navtabs.html',
-            scope: {
-                pageName: '='
-            },
-            controller: [
-                '$scope',
-                function($scope) {
-                    this.selectTabIfOnPage = function(tab) {
-                        if (tab.name === $scope.pageName) {
-                            tab.selected = true;
-                        }
-                    };
-                }
-            ]
-        };
-    })
-    .directive('tab', function() {
-        return {
-            require: '^navtabs',
-            restrict: 'E',
-            replace: true,
-            transclude: true,
-            scope: {},
-            template: '<li ng-class="{ active: selected }"><a href="{{ href }}" ng-transclude></a></li>',
-            link: function(scope, element, attr, navtabsCtrl) {
-                scope.name = attr.name;
-                scope.href = attr.href;
-                scope.selected = false;
-                navtabsCtrl.selectTabIfOnPage(scope);
-            }
-        };
-    })
-    .controller('SecondController', [
+    .controller('EventController', [
         '$scope',
-        function($scope) {
+        '$http',
+        '$location',
+        'windowAlert',
+        'eventStatus',
+        function($scope, $http, $location, windowAlert, eventStatus) {
             $scope.state = {};
-            $scope.state.pageName = 'secondPage';
+            $scope.state.pageName = 'p3';
+
+            $scope.state.eventName = eventStatus.getName();
+            $scope.state.eventAccessCode = eventStatus.getAccessCode();
+
         }
     ])
+
+
     ;
