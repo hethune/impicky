@@ -1,5 +1,4 @@
 from flask import request, jsonify, render_template
-
 import flask.views
 import json
 
